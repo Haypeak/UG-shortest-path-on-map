@@ -13,7 +13,9 @@ import app.graph.Edge;
 import app.graph.Graph;
 import app.graph.Node;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
@@ -147,27 +149,29 @@ public class Main {
           System.out.println(builder.toString());
      }
 
-     public static int getInput(String k) {
-          System.out.println(k);
-          int a = 0;
+     public static int getInput(String prompt) {
+          System.out.println(prompt);
+          int input = -1;
 
           while (true) {
-
-               try {
-                    try (Scanner s = new Scanner(System.in)) {
-                         a = s.nextInt();
-                    }
-                    if (a <= 0 || a >= graph.getSize()) {
-                         throw new Exception();
-                         // System.out.print("Enter a valid input >>>");
-                         // continue;
+               try (Scanner s = new Scanner(System.in)) {
+                    input = s.nextInt();
+                    if (input <= 0 || input >= graph.getSize()) {
+                         throw new IllegalArgumentException("Input must be within the range of available nodes.");
                     }
                     break;
+               } catch (InputMismatchException e) {
+                    System.out.println("Please enter a valid number.");
+               } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+               } catch (NoSuchElementException e) {
+                    System.out.println("No input received. Please try again.");
                } catch (Exception e) {
-                    System.out.println("Sorry invalid input");
-                    System.out.print(k);
+                    System.out.println("An unexpected error occurred. Please try again.");
                }
+               System.out.print(prompt);
           }
-          return a;
+
+          return input;
      }
 }
