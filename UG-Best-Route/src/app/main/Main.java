@@ -1,27 +1,16 @@
 package app.main;
 
-// import java.io.BufferedReader;
-// import java.io.File;
-// import java.io.FileReader;
-// import java.io.IOException;
-// import java.io.InputStreamReader;
-import java.util.ArrayList;
 import app.GUI.GraphAppGUI;
-import app.algorithms.BFS;
-import app.algorithms.Dijkstra;
 import app.graph.Edge;
 import app.graph.Graph;
 import app.graph.Node;
-// import java.util.HashMap;
-import java.util.InputMismatchException;
-// import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
 
 public class Main {
      static Graph graph = new Graph();
 
      public static void main(String[] args) {
+          // Display the welcoming message centered
+          displayWelcomeMessage();
 
           // Nodes in the graph.
           Node gym = new Node("Gym");
@@ -42,7 +31,7 @@ public class Main {
           Node busSchool = new Node("Business School");
           Node gcb = new Node("GCB");
           Node csdepartment = new Node("CS Department");
-          Node polictialScienceDepartment = new Node("Political Science Department");
+          Node politicalScienceDepartment = new Node("Political Science Department");
           Node nb = new Node("NB");
           Node nnb = new Node("NNB");
 
@@ -84,94 +73,27 @@ public class Main {
           graph.addEdge(new Edge(voltaHall, busSchool, 390, 3));
           graph.addEdge(new Edge(voltaHall, balmeLibrary, 415, 5));
 
-          graph.addEdge(new Edge(voltaHall, balmeLibrary, 415, 5));
-
           graph.addEdge(new Edge(busSchool, gcb, 433, 5));
           graph.addEdge(new Edge(busSchool, nb, 424, 5));
           graph.addEdge(new Edge(busSchool, csdepartment, 389, 4));
 
-          graph.addEdge(new Edge(polictialScienceDepartment, csdepartment, 386, 4));
-          graph.addEdge(new Edge(polictialScienceDepartment, nb, 204, 3));
+          graph.addEdge(new Edge(politicalScienceDepartment, csdepartment, 386, 4));
+          graph.addEdge(new Edge(politicalScienceDepartment, nb, 204, 3));
           graph.addEdge(new Edge(nb, nnb, 330, 4));
           graph.addEdge(new Edge(nnb, gcb, 160, 3));
 
           // Set the graph in the GUI and launch it
           GraphAppGUI.setGraph(graph);
           new GraphAppGUI();
-
-          // Optional: If you still want to allow command-line interaction:
-          // runCommandLineInterface();
-
-          // //File access start
-          // File file = new
-          // File("C:\\Users\\DANIEL\\eclipse-workspace\\UG-Best-Route\\src\\app\\main\\locations.txt");
-          // // Change this to your file name
-          //
-          // try {
-          // BufferedReader bi = new BufferedReader(new FileReader(file));
-          // String s;
-          // while ((s = bi.readLine()) != null) {
-          // String[] fields = s.split(", ");
-          // graph.addEdge(new Edge(new Node(fields[0]), new Node(fields[1]),
-          // Integer.parseInt(fields[2]), Integer.parseInt(fields[3])));
-          // }
-          // }
-          // catch (IOException e) {
-          // // Handle error...
-          // System.out.println(e);
-          // }
-          // File access end
-          // Albert edits
-          graph.printNodes();
-          int i = getInput("Select your start point: ");
-          Node n = (Node) graph.selectNode(i - 1);
-          String souceName = n.getName();
-          i = getInput("Select your destination : ");
-          n = (Node) graph.selectNode(i - 1);
-          String destName = n.getName();
-          // Albert edits end
-
-          Node soucNode = graph.getNodeByName(souceName);
-          Node destNode = graph.getNodeByName(destName);
-          ArrayList<Node> shortestPath = Dijkstra.findShortestPath(graph, soucNode, destNode);
-
-          System.out.println("The Shortest Path is: " + shortestPath.toString());
-          System.out.println("The Total Distance that will be covered is: " + Dijkstra.getDistance(destNode));
-
-          ArrayList<ArrayList<Node>> allPaths = BFS.findAllPaths(graph, soucNode, destNode);
-
-          StringBuilder builder = new StringBuilder();
-          for (ArrayList<Node> nodes : allPaths.subList(allPaths.size() - 6, allPaths.size() - 1)) {
-               String distance = String.format("%.3f", graph.calculateDistance(nodes) / 1000f) + "km";
-               builder.append(nodes.toString() + ", " + distance + "\n");
-          }
-
-          System.out.println(builder.toString());
      }
 
-     public static int getInput(String prompt) {
-          System.out.println(prompt);
-          int input = -1;
-
-          while (true) {
-               try (Scanner s = new Scanner(System.in)) {
-                    input = s.nextInt();
-                    if (input <= 0 || input >= graph.getSize()) {
-                         throw new IllegalArgumentException("Input must be within the range of available nodes.");
-                    }
-                    break;
-               } catch (InputMismatchException e) {
-                    System.out.println("Please enter a valid number.");
-               } catch (IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-               } catch (NoSuchElementException e) {
-                    System.out.println("No input received. Please try again.");
-               } catch (Exception e) {
-                    System.out.println("An unexpected error occurred. Please try again.");
-               }
-               System.out.print(prompt);
-          }
-
-          return input;
+     public static void displayWelcomeMessage() {
+          String message = "\nWelcome to the UG Campus Map Application! \n \nPlease move to the GUI App to enjoy the full experience, Thank You.";
+          int width = 80; // Adjust width as needed
+          int padding = (width - message.length()) / 2;
+          String paddedMessage = String.format("%" + (padding + message.length()) + "s", message);
+          System.out.println(); // Print a newline before the message
+          System.out.println(paddedMessage);
+          System.out.println();
      }
 }

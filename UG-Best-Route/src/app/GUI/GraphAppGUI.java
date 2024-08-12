@@ -1,13 +1,13 @@
 package app.GUI;
 
-import javax.swing.*;
+import app.algorithms.Dijkstra;
+import app.graph.Graph;
+import app.graph.Node;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import app.graph.Graph;
-import app.graph.Node;
-import app.algorithms.Dijkstra;
 import java.util.ArrayList;
+import javax.swing.*;
 
 public class GraphAppGUI extends JFrame {
     private static Graph graph;
@@ -17,16 +17,16 @@ public class GraphAppGUI extends JFrame {
     }
 
     public GraphAppGUI() {
-        setTitle("Campus Map");
+        setTitle("UG Campus Map");
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Create UI components
-        JLabel welcomeLabel = new JLabel("Welcome to the Campus Map App!");
+        JLabel welcomeLabel = new JLabel("Welcome to the UG Campus Map App!");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        welcomeLabel.setForeground(Color.BLACK); // White text color
-        welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text
+        welcomeLabel.setForeground(Color.BLACK);
+        welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel startLabel = new JLabel("Select your start point:");
         startLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -47,13 +47,13 @@ public class GraphAppGUI extends JFrame {
         findPathButton.setForeground(Color.WHITE);
 
         JTextArea resultTextArea = new JTextArea(5, 20);
-        resultTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        resultTextArea.setBackground(Color.LIGHT_GRAY); // Set background color to light gray
+        resultTextArea.setFont(new Font("Monospaced", Font.BOLD, 12));
+        resultTextArea.setBackground(Color.LIGHT_GRAY);
         resultTextArea.setForeground(Color.DARK_GRAY);
         resultTextArea.setEditable(false);
-        resultTextArea.setLineWrap(true); // Enable line wrap
-        resultTextArea.setWrapStyleWord(true); // Wrap at word boundaries
-        resultTextArea.setPreferredSize(new Dimension(550, 100)); // Increase width to 550 pixels
+        resultTextArea.setLineWrap(true);
+        resultTextArea.setWrapStyleWord(true);
+        resultTextArea.setPreferredSize(new Dimension(550, 100));
 
         // Populate combo boxes with node names
         for (Node node : graph.getNodes()) {
@@ -71,9 +71,29 @@ public class GraphAppGUI extends JFrame {
                     Node startNode = graph.getNodeByName(startNodeName);
                     Node endNode = graph.getNodeByName(endNodeName);
                     if (startNode != null && endNode != null) {
-                        ArrayList<Node> shortestPath = Dijkstra.findShortestPath(graph, startNode, endNode);
-                        resultTextArea.setText("The Shortest Path is: " + shortestPath.toString() +
-                                "\nThe Total Distance that will be covered is: " + Dijkstra.getDistance(endNode));
+                        if (startNode.equals(endNode)) {
+                            // Display error message if start and end nodes are the same
+                            resultTextArea.setText("Error: Your start point and destination must differ.");
+                        } else {
+                            ArrayList<Node> shortestPath = Dijkstra.findShortestPath(graph, startNode, endNode);
+                            
+                            // Modify the shortest path output
+                            StringBuilder pathBuilder = new StringBuilder("The Shortest Path is: ");
+                            for (int j = 0; j < shortestPath.size(); j++) {
+                                if (j == 0) {
+                                    pathBuilder.append("[ Move from ").append(shortestPath.get(j).getName());
+                                } else if (j == shortestPath.size() - 1) {
+                                    pathBuilder.append(" -> End at the ").append(shortestPath.get(j).getName());
+                                } else {
+                                    pathBuilder.append(" -> ").append(shortestPath.get(j).getName());
+                                }
+                            }
+                            pathBuilder.append(" ]");
+
+                            // Update the text area with the modified path
+                            resultTextArea.setText(pathBuilder.toString() +
+                                                   "\nThe Total Distance that will be covered is: " + Dijkstra.getDistance(endNode));
+                        }
                     }
                 }
             }
@@ -83,11 +103,11 @@ public class GraphAppGUI extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow stretching horizontally
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        panel.add(welcomeLabel, gbc); // Add the welcome message
+        panel.add(welcomeLabel, gbc);
 
         gbc.gridy = 1;
         panel.add(startLabel, gbc);
@@ -112,11 +132,11 @@ public class GraphAppGUI extends JFrame {
 
         gbc.gridy = 4;
         gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow horizontal stretching for text area
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(new JScrollPane(resultTextArea), gbc);
 
         add(panel);
-        getContentPane().setBackground(Color.RED); // Change the background color of the entire application to red
+        getContentPane().setBackground(Color.RED);
 
         // Make the window visible
         setVisible(true);
