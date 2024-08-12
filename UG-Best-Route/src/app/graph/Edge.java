@@ -2,14 +2,14 @@ package app.graph;
 
 import java.util.ArrayList;
 
-public class Edge implements Comparable<Edge>, Cloneable{
+public class Edge implements Comparable<Edge>, Cloneable {
     private Node source;
     private Node destination;
     private int time;
     private double distance;
     private String landMarks;
 
-    public Edge(Node source, Node destination, int distance){
+    public Edge(Node source, Node destination, int distance) {
         this.source = source;
         this.destination = destination;
         this.distance = distance;
@@ -17,7 +17,7 @@ public class Edge implements Comparable<Edge>, Cloneable{
         this.landMarks = "";
     }
 
-    public Edge(Node source, Node destination, double distance,  int time){
+    public Edge(Node source, Node destination, double distance, int time) {
         this.source = source;
         this.destination = destination;
         this.distance = distance;
@@ -25,7 +25,7 @@ public class Edge implements Comparable<Edge>, Cloneable{
         this.landMarks = "";
     }
 
-    public Edge(Node source, Node destination, double distance,  int time, String landMarks){
+    public Edge(Node source, Node destination, double distance, int time, String landMarks) {
         this.source = source;
         this.destination = destination;
         this.distance = distance;
@@ -41,33 +41,32 @@ public class Edge implements Comparable<Edge>, Cloneable{
         return source;
     }
 
-    public void setSource(Node source){
+    public void setSource(Node source) {
         this.source = source;
     }
 
-    public void setDestination(Node destination){
+    public void setDestination(Node destination) {
         this.destination = destination;
     }
 
     public double getDistance() {
         return distance;
     }
-    
+
     public long getTime() {
         return time;
     }
 
-    
     @Override
     public String toString() {
-        return source.getName() +  " -> " + destination.getName() + " " + getDistance();
+        return source.getName() + " -> " + destination.getName() + " " + getDistance();
     }
 
     @Override
     public int compareTo(Edge other) {
         if (getDistance() > other.getDistance())
             return 1;
-        else if (getDistance()< other.getDistance())
+        else if (getDistance() < other.getDistance())
             return -1;
         return 0;
     }
